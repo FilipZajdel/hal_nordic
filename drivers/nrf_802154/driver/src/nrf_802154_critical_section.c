@@ -252,6 +252,8 @@ bool nrf_802154_critical_section_is_nested(void)
     return m_nested_critical_section_counter > 1;
 }
 
+#if !defined(CONFIG_SOC_COMPATIBLE_NRF52840)
+
 uint32_t nrf_802154_critical_section_active_vector_priority_get(void)
 {
     uint32_t  active_vector_id = (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) >> SCB_ICSR_VECTACTIVE_Pos;
@@ -271,3 +273,12 @@ uint32_t nrf_802154_critical_section_active_vector_priority_get(void)
 
     return active_priority;
 }
+
+#else
+
+uint32_t nrf_802154_critical_section_active_vector_priority_get(void)
+{
+    return UINT32_MAX;
+}
+
+#endif /* !defined(CONFIG_SOC_COMPATIBLE_NRF52840) */
